@@ -12,7 +12,7 @@
 
 ## Screenshot
 
-![LiftLog Screenshot](images/screenshot.jpg)
+![LiftLog Screenshot](src/images/LiftLog.png)
 
 ## Tech Stack
 
