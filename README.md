@@ -13,7 +13,7 @@
 
 ## 📸 Screenshot
 
-![LiftLog Screenshot](src/images/LiftLog.png)
+![LiftLog Screenshot](/images/LiftLog.png) 
 
 
 ## 🛠️ Tech Stack
