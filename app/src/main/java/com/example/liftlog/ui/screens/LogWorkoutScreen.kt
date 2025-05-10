@@ -2,20 +2,20 @@ package com.example.liftlog.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.foundation.shape.RoundedCornerShape
-import com.example.liftlog.viewmodel.WorkoutViewModel
 import com.example.liftlog.data.Workout
+import com.example.liftlog.viewmodel.WorkoutViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,7 +44,7 @@ fun LogWorkoutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Log Workout") },
+                title = { Text("Log Exercise") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -110,9 +110,9 @@ fun LogWorkoutScreen(
 
             Button(
                 onClick = {
-                    val date = SimpleDateFormat("MMM dd", Locale.getDefault()).format(Date())
+                    val date = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
                     val workout = Workout(
-                        id = 0, // required by Room when autoGenerate = true
+                        id = 0L,
                         name = exerciseName,
                         date = date,
                         weight = weight.toFloatOrNull() ?: 0f,
@@ -120,11 +120,11 @@ fun LogWorkoutScreen(
                         reps = reps.toIntOrNull() ?: 0,
                         notes = notes.ifBlank { null }
                     )
-                    viewModel.addWorkout(workout)
-                    Toast.makeText(context, "Workout saved!", Toast.LENGTH_SHORT).show()
+                    viewModel.insertWorkout(workout)
+                    Toast.makeText(context, "Exercise saved!", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
 
-                    // Clear inputs
+                    // Clear fields
                     exerciseName = ""
                     weight = ""
                     sets = ""
@@ -136,7 +136,7 @@ fun LogWorkoutScreen(
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Save Workout")
+                Text("Save Exercise")
             }
         }
     }

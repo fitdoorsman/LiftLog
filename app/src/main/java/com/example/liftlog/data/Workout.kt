@@ -8,11 +8,11 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "workouts")
 data class Workout(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,     // Exercise name
-    val date: String,     // Format: YYYY-MM-DD
-    val weight: Float,    // Weight lifted
-    val sets: Int,        // Number of sets
-    val reps: Int,        // Number of reps per set
-    val notes: String?    // Optional notes
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+    val name: String,
+    val date: String,
+    val weight: Float,
+    val sets: Int,
+    val reps: Int,
+    val notes: String?
 )

@@ -5,15 +5,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.liftlog.data.Workout
 import com.example.liftlog.repository.WorkoutRepository
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel to manage workout data and interact with repository.
  */
 class WorkoutViewModel(private val repository: WorkoutRepository) : ViewModel() {
 
-    val allWorkouts = repository.allWorkouts
+    // 🔥 Expose allWorkouts as StateFlow for real-time updates
+    val allWorkouts: StateFlow<List<Workout>> = repository.allWorkouts
+        .map { it }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun insertWorkout(workout: Workout) {
         viewModelScope.launch {
@@ -24,13 +31,6 @@ class WorkoutViewModel(private val repository: WorkoutRepository) : ViewModel() 
     fun getWorkoutById(id: Long): Flow<Workout?> {
         return repository.getWorkoutById(id)
     }
-
-    fun addWorkout(workout: Workout) {
-        viewModelScope.launch {
-            repository.insert(workout)
-        }
-    }
-
 
     fun deleteWorkout(workout: Workout) {
         viewModelScope.launch {
@@ -51,6 +51,9 @@ class WorkoutViewModel(private val repository: WorkoutRepository) : ViewModel() 
     }
 }
 
+/**
+ * Factory for creating WorkoutViewModel instances.
+ */
 class WorkoutViewModelFactory(private val repository: WorkoutRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WorkoutViewModel::class.java)) {

@@ -5,18 +5,29 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// You can customize this as needed
-val Typography = Typography(
+val LiftLogTypography = Typography(
+    headlineLarge = TextStyle(
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold
+    ),
     titleLarge = TextStyle(
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    titleMedium = TextStyle(
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold
+    ),
+    bodyLarge = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium
     ),
     bodyMedium = TextStyle(
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal
     ),
-    labelSmall = TextStyle(
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp
+    labelLarge = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium
     )
 )

@@ -1,4 +1,4 @@
-package com.example.liftlog.model
+package com.example.liftlog.viewmodel
 
 data class Workout(
     val exercise: String,

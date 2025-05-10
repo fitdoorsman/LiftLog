@@ -1,25 +1,20 @@
 package com.example.liftlog.ui.screens
 
 import android.app.Activity
+import android.content.Context
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.compose.foundation.layout.Arrangement
 import com.example.liftlog.viewmodel.ThemeViewModel
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,14 +24,19 @@ fun PreferencesScreen(
 ) {
     val context = LocalContext.current
     val isDarkTheme = themeViewModel.isDarkTheme.collectAsState().value
-    val useKg = false // Optional: Implement if needed
+
+    // Access SharedPreferences
+    val sharedPrefs = context.getSharedPreferences("LiftLogPrefs", Context.MODE_PRIVATE)
+
+    // Read stored kg toggle value
+    var useKg by remember { mutableStateOf(sharedPrefs.getBoolean("use_kg", false)) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Preferences",
+                        text = "Settings",
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 },
@@ -59,18 +59,29 @@ fun PreferencesScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
+            // Use Kilograms Toggle
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = useKg, onCheckedChange = { /* Handle unit toggle */ })
+                Checkbox(
+                    checked = useKg,
+                    onCheckedChange = { isChecked ->
+                        useKg = isChecked
+                        sharedPrefs.edit().putBoolean("use_kg", isChecked).apply()
+                        Toast.makeText(context, "Units updated", Toast.LENGTH_SHORT).show()
+                    }
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Use Kilograms (kg)")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Enable Dark Mode Toggle
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                     checked = isDarkTheme,
-                    onCheckedChange = { themeViewModel.setDarkTheme(it) }
+                    onCheckedChange = { isChecked ->
+                        themeViewModel.setDarkTheme(isChecked)
+                    }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -81,7 +92,7 @@ fun PreferencesScreen(
         }
     }
 
-    // Handle hardware back for standalone use
+    // Handle hardware back button
     BackHandler {
         if (navController != null) {
             navController.popBackStack()
